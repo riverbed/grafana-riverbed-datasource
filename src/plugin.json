@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Riverbed Data Store",
+  "id": "riverbed-datastore-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_data_store",
+  "info": {
+    "description": "",
+    "author": {
+      "name": "Riverbed",
+      "url": "https://www.riverbed.com"
+    },
+    "keywords": ["riverbed","ai","datastore","aiops","observability","analytics","euem","npm","apm","incident","telemetry","metrics"],
+    "logos": {
+      "small": "img/riverbed_logo.svg",
+      "large": "img/riverbed_logo.svg"
+    },
+    "links": [
+      {
+        "name": "GitHub Project",
+        "url": "https://github.com/riverbed/grafana-riverbed-datasource"
+      },
+      {
+        "name": "Raise issue",
+        "url": "https://github.com/riverbed/grafana-riverbed-datasource/issues/new"
+      },
+      {
+        "name": "Documentation",
+        "url": "https://github.com/riverbed/grafana-riverbed-datasource/src"
+      }
+    ],
+    "screenshots": [
+      {
+        "name": "Riverbed Data Store Demo Dashboard",
+        "path": "img/riverbed_demo_dashboard.png"
+      },
+      {
+        "name": "Riverbed Data Store Demo Dashboard - EUEM",
+        "path": "img/riverbed_demo_dashboard_digital_experience.png"
+      },
+      {
+        "name": "Riverbed Data Store Demo Dashboard - Application",
+        "path": "img/riverbed_demo_dashboard_network.png"
+      }
+    ],
+    "version": "%VERSION%",
+    "updated": "2025-12-01"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10",
+    "plugins": []
+  }
+}
