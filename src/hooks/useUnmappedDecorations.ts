@@ -72,7 +72,9 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
           const keyText = text.slice(strStart, strEnd);
           // peek ahead for colon at same depth
           let k = j + 1;
-          while (k < text.length && /\\s/.test(text[k] ?? '')) k++;
+          while (k < text.length && /\\s/.test(text[k] ?? '')) {
+            k++;
+          }
           if (k < text.length && (text[k] ?? '') === ':' && objDepth === 1 && keyText === key) {
             const startPos = model.getPositionAt(strStart);
             const endPos = model.getPositionAt(strStart + key.length);
@@ -85,8 +87,11 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
           i = Math.min(j + 1, text.length);
           continue;
         }
-        if (ch === '{') objDepth++;
-        else if (ch === '}') objDepth = Math.max(0, objDepth - 1);
+        if (ch === '{') {
+          objDepth++;
+        } else if (ch === '}') {
+          objDepth = Math.max(0, objDepth - 1);
+        }
         i++;
       }
       return ranges;
@@ -102,9 +107,13 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
       while (i < text.length) {
         const ch = text[i];
         if (inStr) {
-          if (esc) esc = false;
-          else if (ch === '\\\\') esc = true;
-          else if (ch === quote) inStr = false;
+          if (esc) {
+            esc = false;
+          } else if (ch === '\\\\') {
+            esc = true;
+          } else if (ch === quote) {
+            inStr = false;
+          }
           i++;
           continue;
         }
@@ -116,19 +125,29 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
             eEsc = false;
           while (j < text.length) {
             const cj = text[j];
-            if (eEsc) eEsc = false;
-            else if (cj === '\\\\') eEsc = true;
-            else if (cj === quote) break;
+            if (eEsc) {
+              eEsc = false;
+            } else if (cj === '\\\\') {
+              eEsc = true;
+            } else if (cj === quote) {
+              break;
+            }
             j++;
           }
           const keyText = text.slice(strStart, j);
           let k = j + 1;
-          while (k < text.length && /\\s/.test(text[k] ?? '')) k++;
+          while (k < text.length && /\\s/.test(text[k] ?? '')) {
+            k++;
+          }
           if (k < text.length && (text[k] ?? '') === ':' && objDepth === 1 && keyText === key) {
             // find object start
             k++;
-            while (k < text.length && /\\s/.test(text[k] ?? '')) k++;
-            if ((text[k] ?? '') !== '{') return null;
+            while (k < text.length && /\\s/.test(text[k] ?? '')) {
+              k++;
+            }
+            if ((text[k] ?? '') !== '{') {
+              return null;
+            }
             // match braces
             let depth = 0;
             let p = k;
@@ -138,15 +157,20 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
             while (p < text.length) {
               const cp = text[p];
               if (inS) {
-                if (escS) escS = false;
-                else if (cp === '\\\\') escS = true;
-                else if (cp === q) inS = false;
+                if (escS) {
+                  escS = false;
+                } else if (cp === '\\\\') {
+                  escS = true;
+                } else if (cp === q) {
+                  inS = false;
+                }
               } else {
                 if (cp === '"' || cp === "'") {
                   q = cp;
                   inS = true;
-                } else if (cp === '{') depth++;
-                else if (cp === '}') {
+                } else if (cp === '{') {
+                  depth++;
+                } else if (cp === '}') {
                   depth--;
                   if (depth === 0) {
                     return { start: k, end: p + 1 };
@@ -160,8 +184,11 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
           i = Math.min(j + 1, text.length);
           continue;
         }
-        if (ch === '{') objDepth++;
-        else if (ch === '}') objDepth = Math.max(0, objDepth - 1);
+        if (ch === '{') {
+          objDepth++;
+        } else if (ch === '}') {
+          objDepth = Math.max(0, objDepth - 1);
+        }
         i++;
       }
       return null;
@@ -170,7 +197,9 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
     const findFiltersSubKeyRanges = (subKey: string): any[] => {
       const ranges: any[] = [];
       const objRange = findObjectRangeAfterKey('filters');
-      if (!objRange) return ranges;
+      if (!objRange) {
+        return ranges;
+      }
       const slice = text.slice(objRange.start, objRange.end);
       // Scan within filters object for direct property subKey
       let i = 0;
@@ -181,9 +210,13 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
       while (i < slice.length) {
         const ch = slice[i];
         if (inStr) {
-          if (esc) esc = false;
-          else if (ch === '\\\\') esc = true;
-          else if (ch === quote) inStr = false;
+          if (esc) {
+            esc = false;
+          } else if (ch === '\\\\') {
+            esc = true;
+          } else if (ch === quote) {
+            inStr = false;
+          }
           i++;
           continue;
         }
@@ -195,14 +228,20 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
             eEsc = false;
           while (j < slice.length) {
             const cj = slice[j];
-            if (eEsc) eEsc = false;
-            else if (cj === '\\\\') eEsc = true;
-            else if (cj === quote) break;
+            if (eEsc) {
+              eEsc = false;
+            } else if (cj === '\\\\') {
+              eEsc = true;
+            } else if (cj === quote) {
+              break;
+            }
             j++;
           }
           const keyText = slice.slice(strStart, j);
           let k = j + 1;
-          while (k < slice.length && /\\s/.test(slice[k] ?? '')) k++;
+          while (k < slice.length && /\\s/.test(slice[k] ?? '')) {
+            k++;
+          }
           if (k < slice.length && (slice[k] ?? '') === ':' && depth === 1 && keyText === subKey) {
             const absStart = objRange.start + strStart;
             const startPos = model.getPositionAt(absStart);
@@ -215,8 +254,11 @@ export function useUnmappedDecorations({ editor, monaco, unmappedPaths, jsonText
           i = Math.min(j + 1, slice.length);
           continue;
         }
-        if (ch === '{') depth++;
-        else if (ch === '}') depth = Math.max(0, depth - 1);
+        if (ch === '{') {
+          depth++;
+        } else if (ch === '}') {
+          depth = Math.max(0, depth - 1);
+        }
         i++;
       }
       return ranges;

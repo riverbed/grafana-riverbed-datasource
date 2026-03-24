@@ -104,7 +104,9 @@ export function buildSchema(info: any, currentQueryType: any | null) {
 
   // Collect full dotted key ids for leaves in info.keys (fallback for keys-mode suggestions)
   const collectLeafKeyIds = (infoKeysObj: any): string[] => {
-    if (!infoKeysObj || typeof infoKeysObj !== 'object') return [];
+    if (!infoKeysObj || typeof infoKeysObj !== 'object') {
+      return [];
+    }
     const out: string[] = [];
     const dive = (baseId: string, node: any, trail: string[]) => {
       const props = node?.properties && typeof node.properties === 'object' ? node.properties : {};
@@ -157,7 +159,9 @@ export function buildSchema(info: any, currentQueryType: any | null) {
   // Helper to get leaf type for full dotted key id; supports both nested and flattened entries
   const getLeafTypeForKeyId = (keyId: string): string | undefined => {
     const t = resolveKeyType(keyId, infoKeys);
-    if (t) return t;
+    if (t) {
+      return t;
+    }
     const flat = infoKeys && (infoKeys as any)[keyId];
     const flatType = flat && typeof flat.type === 'string' ? flat.type : undefined;
     return flatType;
@@ -203,8 +207,11 @@ export function buildSchema(info: any, currentQueryType: any | null) {
             for (const k of candidateKeys) {
               const t = getLeafTypeForKeyId(k);
               let def: any = '';
-              if (t && /(number|integer|float|double)/i.test(t)) def = 0;
-              else if (t && /boolean/i.test(t)) def = false;
+              if (t && /(number|integer|float|double)/i.test(t)) {
+                def = 0;
+              } else if (t && /boolean/i.test(t)) {
+                def = false;
+              }
               const bodyObj: any = { [k]: def };
               itemSnippets.push({
                 label: `${resolveKeyLabel(k, infoKeys) || k}`,
