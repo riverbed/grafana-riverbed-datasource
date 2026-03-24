@@ -21,27 +21,29 @@ Bring your own Grafana account and your account on the Riverbed Platform enabled
 
 ## Getting Started
 
-1. Open the Riverbed platform
+1. Open the Riverbed Console (e.g `https://yourenv.cloud.riverbed.com`)
 
-2. Go to **Management** > **API Access** to find the details and create a client credential for Grafana
+2. Open the Wafle menu and go to **IQ Ops** > **Management**, then open the Hamburger menu and go to **API Access** to find the details and create a client credential for Grafana ()
 
     * Tenant Id
     * Directory Id
     * Token URI
     * API Scope
+
+3. Click on the **Create OAuth Client** button and set the name `Riverbed Data Store Plugin for Grafana` to get the credentials:
+
     * Client Id
     * Client Secret
 
+4. Open Grafana Account
 
-3. Open Grafana Account
+5. Go to **Home** > **Connections** > **Data sources** and click **+ Add new data source**
 
-4. Go to **Home** > **Connections** > **Data sources** and click **+ Add new data source**
+6. Find "Riverbed Data Store datasource" and click **Install now**
 
-5. Find "Riverbed Data Store datasource" and click **Install now**
+7. Fill the Authentication details from step 2.
 
-6. Fill the Authentication details from step 2.
-
-7. Save and test
+8. Save and test
 
 Congrats! You are now ready to start building a dashboard.
 
