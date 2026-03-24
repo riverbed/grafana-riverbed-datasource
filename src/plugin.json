@@ -5,7 +5,7 @@
   "id": "riverbed-datastore-datasource",
   "metrics": true,
   "backend": true,
-  "executable": "gpx_data_store",
+  "executable": "gpx_datastore",
   "info": {
     "description": "",
     "author": {
