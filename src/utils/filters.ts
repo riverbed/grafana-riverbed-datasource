@@ -36,10 +36,14 @@ function hasKeysOption(filters: unknown): boolean {
   }
   for (const item of filters) {
     if (typeof item === 'string') {
-      if (item.trim().toLowerCase() === 'keys') return true;
+      if (item.trim().toLowerCase() === 'keys') {
+        return true;
+      }
     } else if (item && typeof item === 'object') {
       const candidate = (item as any).id ?? (item as any).name ?? (item as any).key ?? (item as any).type;
-      if (typeof candidate === 'string' && candidate.trim().toLowerCase() === 'keys') return true;
+      if (typeof candidate === 'string' && candidate.trim().toLowerCase() === 'keys') {
+        return true;
+      }
     }
   }
   return false;
@@ -95,14 +99,18 @@ export function deriveFilterKeyOptions(queryTypeSpec: any | null | undefined): S
 }
 
 export function queryHasKeysOption(queryTypeSpec: any | null | undefined): boolean {
-  if (!queryTypeSpec) return false;
+  if (!queryTypeSpec) {
+    return false;
+  }
   return hasKeysOption(queryTypeSpec.filters);
 }
 
 // Explicit semantic helper: legacy query types are those whose filters list exists
 // and does NOT include a "keys" entry.
 export function isLegacyQueryType(queryTypeSpec: any | null | undefined): boolean {
-  if (!queryTypeSpec) return false;
+  if (!queryTypeSpec) {
+    return false;
+  }
   const hasList = Array.isArray((queryTypeSpec as any).filters);
   return hasList && !queryHasKeysOption(queryTypeSpec);
 }
@@ -110,19 +118,27 @@ export function isLegacyQueryType(queryTypeSpec: any | null | undefined): boolea
 // Supports dot-notated keys like "application.name" by traversing nested properties.
 // Internal traversal helpers (shared by label/type resolvers)
 export function getKeyNode(infoKeys: any, id: string): any | undefined {
-  if (!id || !infoKeys) return undefined;
+  if (!id || !infoKeys) {
+    return undefined;
+  }
   const parts = id.split('.');
   let node = (infoKeys as any)[parts[0] as any];
-  if (!node) return undefined;
+  if (!node) {
+    return undefined;
+  }
   for (let i = 1; i < parts.length; i++) {
     node = node?.properties?.[parts[i] as any];
-    if (!node) return undefined;
+    if (!node) {
+      return undefined;
+    }
   }
   return node;
 }
 
 export function resolveKeyProp(id: string, infoKeys: any, prop: 'label' | 'type'): string | undefined {
-  if (!id || !infoKeys) return undefined;
+  if (!id || !infoKeys) {
+    return undefined;
+  }
   const node = getKeyNode(infoKeys, id);
   return node ? ((node as any)[prop] as string | undefined) : undefined;
 }

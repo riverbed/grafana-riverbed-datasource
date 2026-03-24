@@ -4,13 +4,23 @@ import { buildNestedKeyObject, collectPrimaryKeyLeaves, parseNestedKeyObject, qu
 // Normalize form query into minimal JSON request body.
 export function buildBodyFromForm(info: InfoSchema | null, q: MyQuery, currentQueryType?: QueryTypeSpec | null): any {
   const body: any = {};
-  if (q.queryTypeId) body.queryType = q.queryTypeId;
-  if (Array.isArray(q.metrics) && q.metrics.length) body.metrics = q.metrics;
-  if (Array.isArray(q.properties) && q.properties.length) body.properties = q.properties;
-  if (Array.isArray(q.groupBy) && q.groupBy.length) body.groupBy = q.groupBy;
+  if (q.queryTypeId) {
+    body.queryType = q.queryTypeId;
+  }
+  if (Array.isArray(q.metrics) && q.metrics.length) {
+    body.metrics = q.metrics;
+  }
+  if (Array.isArray(q.properties) && q.properties.length) {
+    body.properties = q.properties;
+  }
+  if (Array.isArray(q.groupBy) && q.groupBy.length) {
+    body.groupBy = q.groupBy;
+  }
   if (Array.isArray(q.topBy)) {
     const topByFiltered = q.topBy.filter((t) => typeof (t as any)?.id === 'string' && (t as any).id.length > 0);
-    if (topByFiltered.length) body.topBy = topByFiltered;
+    if (topByFiltered.length) {
+      body.topBy = topByFiltered;
+    }
   }
   // For types that support time_series, always emit an explicit boolean timeSeries
   const spec = currentQueryType;
@@ -20,8 +30,12 @@ export function buildBodyFromForm(info: InfoSchema | null, q: MyQuery, currentQu
   if (supportsTS && typeof q.timeSeries === 'boolean') {
     body.timeSeries = q.timeSeries;
   }
-  if (typeof q.limit === 'number') body.limit = q.limit;
-  if (q.comparedTo) body.comparedTo = q.comparedTo;
+  if (typeof q.limit === 'number') {
+    body.limit = q.limit;
+  }
+  if (q.comparedTo) {
+    body.comparedTo = q.comparedTo;
+  }
 
   // Filters
   const effectiveSpec = q.queryTypeId ? (currentQueryType ?? info?.queries?.[q.queryTypeId] ?? null) : null;
@@ -35,12 +49,18 @@ export function buildBodyFromForm(info: InfoSchema | null, q: MyQuery, currentQu
           if ((item as any).type === 'keys' && (item as any).key) {
             const v = (item as any).value;
             const hasValue = typeof v === 'string' ? v.trim().length > 0 : v !== undefined;
-            if (hasValue) obj[(item as any).key as string] = v as any;
+            if (hasValue) {
+              obj[(item as any).key as string] = v as any;
+            }
           }
         }
-        if (Object.keys(obj).length) keysArray.push(obj);
+        if (Object.keys(obj).length) {
+          keysArray.push(obj);
+        }
       }
-      if (keysArray.length) body.filters = { keys: keysArray };
+      if (keysArray.length) {
+        body.filters = { keys: keysArray };
+      }
     }
   } else {
     const outFilters: Record<string, any[]> = {};
@@ -95,7 +115,9 @@ export function rowsFromKeysArray(selectedSpec: QueryTypeSpec | null | undefined
           items.push({ type: 'keys', key: k, value: v as any });
         }
       }
-      if (items.length) rows.push({ items } as FilterRow);
+      if (items.length) {
+        rows.push({ items } as FilterRow);
+      }
     } else {
       const parsedItems = parseNestedKeyObject(obj as any, info?.keys);
       const filteredItems = parsedItems.filter((it) => it.key && allowedKeyStrings.has(it.key));
