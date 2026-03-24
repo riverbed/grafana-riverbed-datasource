@@ -1,23 +1,56 @@
-# Data Store
+# Riverbed Data Store plugin for Grafana
 
+![Dashboard](https://github.com/riverbed/grafana-riverbed-datasource/raw/main/src/img/riverbed-demo-dashboard.png)
 
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+[![Grafana](https://img.shields.io/badge/Grafana-10.0-green)](https://grafana.com/)
+[![Grafana](https://img.shields.io/badge/Grafana-11.0-green)](https://grafana.com/)
+[![Grafana](https://img.shields.io/badge/Grafana-12.0-green)](https://grafana.com/)
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Overview
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+In Grafana, you can now access to the Riverbed Platform using the **Riverbed Data Store plugin for Grafana**.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Bring your own Grafana account and your account on the Riverbed Platform enabled with [Riverbed Products] for example:
+[AIOps](https://www.riverbed.com/products/aiops/), [Digital Experience](https://www.riverbed.com/products/digital-experience-management/),
+[Cloud Observability](https://www.riverbed.com/products/cloud-performance-management/), [Network Observability](https://www.riverbed.com/products/network-performance-management/), [Application Observability](https://www.riverbed.com/products/application-performance-monitoring/) or [Infrastructure Observability](https://www.riverbed.com/products/netim/)
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Requirements
+
+* an account on the Riverbed Platform
+* A Grafana account with admin permission, for example on Grafana Cloud.
+
+## Getting Started
+
+1. Open the Riverbed Console (e.g `https://yourenv.cloud.riverbed.com`)
+
+2. Open the Wafle menu and go to **IQ Ops** > **Management**, then open the Hamburger menu and go to **API Access** to find the details and create a client credential for Grafana ()
+
+    * Tenant Id
+    * Directory Id
+    * Token URI
+    * API Scope
+
+3. Click on the **Create OAuth Client** button and set the name `Riverbed Data Store Plugin for Grafana` to get the credentials:
+
+    * Client Id
+    * Client Secret
+
+4. Open Grafana Account
+
+5. Go to **Home** > **Connections** > **Data sources** and click **+ Add new data source**
+
+6. Find "Riverbed Data Store datasource" and click **Install now**
+
+7. Fill the Authentication details from step 2.
+
+8. Save and test
+
+Congrats! You are now ready to start building a dashboard.
+
+## Documentation
+
+[Learn more](https://github.com/riverbed/grafana-riverbed-datasource)
+
+## Contributing
+
+Feel free to go the [Riverbed Data Store plugin for Grafana](https://github.com/riverbed/grafana-riverbed-datasource) - which is open-source project page - and please let us know if you have any [issue](https://github.com/riverbed/grafana-riverbed-datasource/issues)
