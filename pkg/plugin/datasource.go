@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"sort"
 	"strings"
 	"time"
 
@@ -339,98 +338,6 @@ func injectTimeRange(body map[string]any, from, to time.Time) {
 		"startTime": fmt.Sprintf("%d", from.Unix()),
 		"endTime":   fmt.Sprintf("%d", to.Unix()),
 	}
-}
-
-// Frames conversion moved to pkg/transform
-// Local helpers used by tests that assert naming rules.
-func labelFromKeys(keys map[string]any) string {
-	if keys == nil {
-		return ""
-	}
-	ordered := make([]string, 0, len(keys))
-	for k := range keys {
-		if strings.Contains(k, ".custom.") {
-			continue
-		}
-		ordered = append(ordered, k)
-	}
-	sort.Strings(ordered)
-	labels := make([]string, 0, len(ordered))
-	for _, k := range ordered {
-		v := keys[k]
-		switch vv := v.(type) {
-		case string:
-			labels = append(labels, vv)
-		default:
-			b, _ := json.Marshal(v)
-			labels = append(labels, string(b))
-		}
-	}
-	return strings.Join(labels, " - ")
-}
-
-// formatSeriesName:
-// - Multiple keys: "<keyLabel> - <metricLabel>"
-// - Single key: "<metricLabel>"
-// - Fallback to metric label when the computed name is empty
-func formatSeriesName(nKeys int, keyLabel, metricLabel string) string {
-	name := ""
-	if nKeys > 1 {
-		name = keyLabel
-	}
-	if len(strings.TrimSpace(name)) > 0 {
-		name += " - "
-	}
-	name += metricLabel
-	if strings.TrimSpace(name) == "" {
-		return metricLabel
-	}
-	return name
-}
-
-// framesFromTimeSeries reproduces the plugin's time-series naming rules for tests.
-func framesFromTimeSeries(q api.ResponseQuery) data.Frames {
-	// unique, sorted timestamps (seconds)
-	tsSet := map[int64]struct{}{}
-	for _, dp := range q.Data {
-		for ts := range dp.TimeSeries {
-			var s int64
-			if _, err := fmt.Sscan(ts, &s); err != nil {
-				continue
-			}
-			tsSet[s] = struct{}{}
-		}
-	}
-	timestamps := make([]int64, 0, len(tsSet))
-	for s := range tsSet {
-		timestamps = append(timestamps, s)
-	}
-	sort.Slice(timestamps, func(i, j int) bool { return timestamps[i] < timestamps[j] })
-
-	times := make([]time.Time, len(timestamps))
-	for i, s := range timestamps {
-		times[i] = time.Unix(s, 0)
-	}
-
-	frame := data.NewFrame("", data.NewField("time", nil, times))
-	nKeys := len(q.Data)
-	for _, dp := range q.Data {
-		keyLabel := labelFromKeys(dp.Keys)
-		for _, m := range q.Meta.Metrics {
-			name := formatSeriesName(nKeys, keyLabel, m.Name)
-			values := make([]*float64, len(timestamps))
-			for i, s := range timestamps {
-				sval := fmt.Sprintf("%d", s)
-				var v *float64
-				if tsEntry, ok := dp.TimeSeries[sval]; ok {
-					v = tsEntry[m.ID]
-				}
-				values[i] = v
-			}
-			frame.Fields = append(frame.Fields, data.NewField(name, nil, values))
-		}
-	}
-	return data.Frames{frame}
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, q backend.DataQuery) backend.DataResponse {
