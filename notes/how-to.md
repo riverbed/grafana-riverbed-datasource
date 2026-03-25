@@ -9,7 +9,7 @@ You need to have the following tools set up (ref. [plugin-tools](https://grafana
 * Bash
 * Git
 * Go
-* Mage
+* Mage (`go install github.com/magefile/mage@latest`)
 * Node.js
 * Docker
 
@@ -38,9 +38,9 @@ mage -v build:linux
 
 # Build frontend
 # Using Locked deps (ideal):
-# npm clean-install && npm run build
+npm clean-install && npm run build
 # Using Latest (temporary):
-npm install && npm run build
+# npm install && npm run build
 
 # Run in docker
 docker compose up 
@@ -53,7 +53,7 @@ docker compose up
 
 - Go to Connections > Data sources
 
-- Open the "datastore" connection
+- Open the **Riverbed Data Store** connection
 
 - Fill the connection details in the **Settings** tab
 
@@ -64,11 +64,11 @@ docker compose up
 > - Create OAuth Client, use oauth client name `Riverbed Data Store Plugin for Grafana`
 > - Grab **Client Id**  and **Client Secret**
 
-- Click "Save Test" and check you get data it is "Success"
+- Click **Save Test** and check tt is says "Success"
 
-- Click on "Explorer data" (top right corner from )
+- Click on **Explorer data** (top right corner from )
 
-- Configure this query example. This example This test requires to have NPM+ enabled in the Riverbed Platform (Wafle menu > IQ Ops > Management > Hamburger menu > Edges & Datasources > NPM+)
+- Configure this query example. This example requires to have NPM+ enabled in the Riverbed Platform (Wafle menu > IQ Ops > Management > Hamburger menu > Edges & Datasources > NPM+)
 
     * Query Type: **NPM+ (RAW) Traffic**
     * Metrics: **Traffic**
@@ -77,3 +77,23 @@ docker compose up
 - Click on **Run query** and check you get data like in the screenshot below
 
 ![alt text](riverbed-datastore-sample-query.png)
+
+- Go to Home > Dashboards and create a dashboard
+
+- Add a vizualization and select the datasource **Riverbed Data Store**.
+
+This example requires to have Aternity enabled in the Riverbed Platform (Wafle menu > IQ Ops > Management > Hamburger menu > Edges & Datasources > Aternity SaaS)
+
+- Configure the query and the vizualization, and click the Refresh button (top right corner):
+
+    * Query Type: **Business Activities (Daily)**
+    * Metrics: **Business Activity Volume**
+    * Group-by: **Application**
+    * Filter: 
+      * Key: **Application**
+      * Value: *YourApp*
+    * Vizualization: Bar Chart
+    * Orientation: Horizontal
+
+
+![alt text](riverbed-datastore-sample-query-aternity.png)
