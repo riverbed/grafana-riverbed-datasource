@@ -28,11 +28,12 @@ For a quick start, if you have Docker installed, it is easy to set up and run Gr
 3. Log in with the default username `admin` and password `admin`.
 
 
-> [!TIPS] You can use a different version of the plugin by copying the desired link from the [Riverbed plugin release page](https://github.com/riverbed/grafana-riverbed-datasource/releases) and replacing the URL in the command above.
+> [!TIP]
+> You can use a different version of the plugin by copying the desired link from the [Riverbed plugin release page](https://github.com/riverbed/grafana-riverbed-datasource/releases) and replacing the URL in the command above.
 
-> [!NOTES] To use the plugin in an existing Grafana instance, download the plugin ZIP from the [Riverbed plugin release page](https://github.com/riverbed/grafana-riverbed-datasource/releases) and extract it into your plugin directory (default: `/var/lib/grafana/plugins`). For more details, see the [Grafana help page](https://grafana.com/docs/grafana/latest/setup-grafana/).
+> **Note** To use the plugin in an existing Grafana instance, download the plugin ZIP from the [Riverbed plugin release page](https://github.com/riverbed/grafana-riverbed-datasource/releases) and extract it into your plugin directory (default: `/var/lib/grafana/plugins`). For more details, see the [Grafana help page](https://grafana.com/docs/grafana/latest/setup-grafana/).
 
-> [!NOTES] For advanced usage or to build the plugin yourself, see the [How-to guide](notes/how-to.md).
+> **Note** For advanced usage or to build the plugin yourself, see the [How-to guide](notes/how-to.md).
 
 </details>
 
