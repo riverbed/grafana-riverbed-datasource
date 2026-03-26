@@ -6,7 +6,8 @@
 
 > [!WARNING]
 > This project is currently under active development.
-> Publishing the plugin to the official Grafana plugin catalog is in progress.
+
+Publishing the plugin to the official Grafana plugin catalog is in progress.
 
 ## Quick start
 
