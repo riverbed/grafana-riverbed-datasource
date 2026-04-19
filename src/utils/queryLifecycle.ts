@@ -19,6 +19,7 @@ export function makeDefaultQuery(refId?: string): MyQuery {
     ...(refId ? { refId } : {}),
     // Explicitly clear all user-editable query state.
     queryText: '',
+    supportTime: undefined,
     queryTypeId: undefined,
     metrics: [],
     properties: [],

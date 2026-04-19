@@ -6,6 +6,7 @@ import { TopByEditor } from './TopByEditor';
 import { InplaceDraggableMultiSelect } from './InplaceDraggableMultiSelect';
 import { MyQuery, InfoSchema, QueryTypeSpec } from '../../types';
 import { getGrafanaSupportPrefix, getGrafanaSupportWarning, resolveGrafanaSupportLevel } from '../../utils/grafanaSupport';
+import { doesQueryTypeSupportTime } from '../../utils/supportTime';
 import { resolveKeyLabel } from '../../utils/filters';
 import { sortOptionsByLabel } from '../../utils/options';
 import { useMetricLabelMap } from '../../hooks/useMetricLabelMap';
@@ -69,6 +70,13 @@ export const QueryForm: React.FC<Props> = ({
     return getGrafanaSupportWarning(supportLevel);
   }, [currentQueryType]);
 
+  const supportTimeWarning = useMemo(() => {
+    if (!currentQueryType || doesQueryTypeSupportTime(currentQueryType)) {
+      return undefined;
+    }
+    return 'This query type does not have a notion of time, so the dashboard time control setting will be ignored.';
+  }, [currentQueryType]);
+
   const canTimeSeries = useMemo(() => {
     const list: string[] = currentQueryType?.supportedQueryTypes || [];
     return list.includes('time_series');
@@ -100,6 +108,13 @@ export const QueryForm: React.FC<Props> = ({
             <div style={{ marginTop: 8 }}>
               <Alert title="Query type warning" severity="warning">
                 {queryTypeWarning}
+              </Alert>
+            </div>
+          )}
+          {supportTimeWarning && (
+            <div style={{ marginTop: 8 }}>
+              <Alert title="Time control notice" severity="warning">
+                {supportTimeWarning}
               </Alert>
             </div>
           )}

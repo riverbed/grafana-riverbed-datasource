@@ -9,6 +9,7 @@ import { diffUnmappedPaths } from '../json/diff';
 import { getPluginVersion } from '../utils/version';
 import { buildBodyFromForm as buildBodyFromFormUtil } from '../utils/queryMapping';
 import { resolveGrafanaSupportLevel } from '../utils/grafanaSupport';
+import { doesQueryTypeSupportTime } from '../utils/supportTime';
 import { decideHydrationFromSavedQuery, makeDefaultQuery } from '../utils/queryLifecycle';
 import { useJsonSync } from '../hooks/useJsonSync';
 import { QueryForm } from './query/QueryForm';
@@ -148,25 +149,49 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
     return res;
   }, [data, query.refId]);
 
+  const resolveQueryTypeSpec = useCallback(
+    (queryTypeId?: string): QueryTypeSpec | null => {
+      if (!queryTypeId) {
+        return null;
+      }
+      if (query.queryTypeId === queryTypeId && currentQueryType) {
+        return currentQueryType;
+      }
+      return info?.queries?.[queryTypeId] ?? null;
+    },
+    [currentQueryType, info, query.queryTypeId]
+  );
+
+  const withSupportTime = useCallback(
+    (next: MyQuery, specOverride?: QueryTypeSpec | null): MyQuery => {
+      if (!next.queryTypeId) {
+        return { ...next, supportTime: undefined };
+      }
+      const spec = specOverride ?? resolveQueryTypeSpec(next.queryTypeId);
+      return { ...next, supportTime: doesQueryTypeSupportTime(spec) };
+    },
+    [resolveQueryTypeSpec]
+  );
+
   // Helpers to map between form <-> JSON
   const buildBodyFromForm = useCallback(
-    (q: MyQuery) => buildBodyFromFormUtil(info, q, currentQueryType),
-    [info, currentQueryType]
+    (q: MyQuery) => buildBodyFromFormUtil(info, q, resolveQueryTypeSpec(q.queryTypeId)),
+    [info, resolveQueryTypeSpec]
   );
 
   const handleFormChange = useCallback(
     (next: MyQuery) => {
-      const cleared: MyQuery = {
+      const cleared = withSupportTime({
         ...next,
         ui: {
           ...(next.ui || {}),
           blockExecutionForUnknownQueryType: false,
         },
-      };
+      });
       setLastEditSource('form');
       onChange(cleared);
     },
-    [onChange]
+    [onChange, withSupportTime]
   );
 
   // Tracks validation errors from the last JSON -> Form mapping
@@ -198,8 +223,10 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
         }
       }
 
+      const selectedSpec: QueryTypeSpec | null = selectedQueryTypeId ? resolveQueryTypeSpec(selectedQueryTypeId) : null;
+
       // Build a cleared baseline for known fields (overwrite strategy)
-      const baseline: MyQuery = {
+      const baseline = withSupportTime({
         ...query,
         queryTypeId: selectedQueryTypeId ?? query.queryTypeId,
         metrics: [],
@@ -212,7 +239,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
         legacyFilters: {},
         filters: undefined,
         comparedTo: undefined,
-      };
+      }, selectedSpec);
 
       const next: MyQuery = { ...baseline };
 
@@ -227,8 +254,6 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
         lastValidationErrorsRef.current = errorText;
         return next;
       }
-
-      const selectedSpec: any = selectedQueryTypeId ? info?.queries?.[selectedQueryTypeId] : currentQueryType;
 
       // Helpers for validating lists
       const ensureStrings = (arr: any): string[] =>
@@ -415,7 +440,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
 
       return next;
     },
-    [query, info, currentQueryType]
+    [query, info, resolveQueryTypeSpec, withSupportTime]
   );
 
   const [jsonError, setJsonError] = useState<string | undefined>(undefined);
@@ -605,8 +630,9 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
   // Explicit handler for Query Type change to keep JSON in sync immediately
   const handleQueryTypeChange = useCallback(
     (newTypeId?: string) => {
+      const selectedSpec = resolveQueryTypeSpec(newTypeId);
       // Reset dependent fields
-      const cleared: MyQuery = {
+      const cleared = withSupportTime({
         ...query,
         ui: query.ui ? { ...query.ui, blockExecutionForUnknownQueryType: false } : query.ui,
         queryTypeId: newTypeId,
@@ -619,7 +645,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
         topBy: [],
         limit: 10,
         comparedTo: undefined,
-      };
+      }, selectedSpec);
 
       // Build form body from the cleared form for the new type
       const body = buildBodyFromForm(cleared);
@@ -633,7 +659,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource, data }: P
       setLastEditSource('form');
       onChange({ ...cleared, queryText: pretty });
     },
-    [query, buildBodyFromForm, setJsonText, setUnmappedPaths, onChange]
+    [query, buildBodyFromForm, onChange, resolveQueryTypeSpec, setJsonText, setUnmappedPaths, withSupportTime]
   );
 
   // Live JSON updates when form fields change

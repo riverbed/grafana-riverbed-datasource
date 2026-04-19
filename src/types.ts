@@ -34,6 +34,8 @@ export interface QueryTypeSpec {
   // For legacy types, a list of filter buckets (no 'keys' present means legacy)
   // For keys-mode, this list includes the literal string 'keys'
   filters?: Array<string | { id?: string; name?: string; key?: string; type?: string }>;
+  // Whether the query type supports Grafana dashboard time controls. Defaults to true.
+  supportTime?: boolean;
   // Whether this query type is supported for use in the Grafana plugin.
   supportGrafanaPlugIn?: GrafanaSupportLevel;
 }
@@ -84,6 +86,8 @@ export interface MyQuery extends DataQuery {
   };
   // Advanced
   queryText?: string;
+  // Derived from the selected query type so the backend can skip time injection when unsupported.
+  supportTime?: boolean;
   jsonEditorHeight?: number;
   // Split view percentage width for left/form pane
   editorSplit?: number;

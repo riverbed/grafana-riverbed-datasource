@@ -1,6 +1,6 @@
 # Riverbed Data Store plugin for Grafana
 
-![Dashboard](https://github.com/riverbed/grafana-riverbed-datasource/raw/main/src/img/riverbed-demo-dashboard.png)
+![Dashboard](https://github.com/riverbed/grafana-riverbed-datasource/blob/main/src/img/riverbed_demo_dashboard.png?raw=true)
 
 [![Grafana](https://img.shields.io/badge/Grafana-10.0-green)](https://grafana.com/)
 [![Grafana](https://img.shields.io/badge/Grafana-11.0-green)](https://grafana.com/)
@@ -10,7 +10,7 @@
 
 In Grafana, you can now access to the Riverbed Platform using the **Riverbed Data Store plugin for Grafana**.
 
-Bring your own Grafana account and your account on the Riverbed Platform enabled with [Riverbed Products] for example:
+Bring your own Grafana account and your account on the Riverbed Platform enabled with [Riverbed Products](https://www.riverbed.com/products) for example:
 [AIOps](https://www.riverbed.com/products/aiops/), [Digital Experience](https://www.riverbed.com/products/digital-experience-management/),
 [Cloud Observability](https://www.riverbed.com/products/cloud-performance-management/), [Network Observability](https://www.riverbed.com/products/network-performance-management/), [Application Observability](https://www.riverbed.com/products/application-performance-monitoring/) or [Infrastructure Observability](https://www.riverbed.com/products/netim/)
 

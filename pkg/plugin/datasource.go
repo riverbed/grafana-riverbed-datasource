@@ -269,7 +269,12 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 // Query model received from frontend
 type queryModel struct {
-	QueryText string `json:"queryText"`
+	QueryText   string `json:"queryText"`
+	SupportTime *bool  `json:"supportTime,omitempty"`
+}
+
+func (qm queryModel) supportsTime() bool {
+	return qm.SupportTime == nil || *qm.SupportTime
 }
 
 // Minimal shapes for Data Ocean response used for framing (shared via internal/api)
@@ -365,7 +370,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, q ba
 		"fromLocal", fromLocal,
 		"toLocal", toLocal,
 	)
-	injectTimeRange(body, q.TimeRange.From, q.TimeRange.To)
+	if qm.supportsTime() {
+		injectTimeRange(body, q.TimeRange.From, q.TimeRange.To)
+	}
 	b, _ := json.Marshal(body)
 
 	ver := d.resolveQueriesVersion()
