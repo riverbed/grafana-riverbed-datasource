@@ -4,6 +4,7 @@ import { mergeFormIntoJson } from '../json/merge';
 import { diffUnmappedPaths } from '../json/diff';
 import { isLegacyQueryType } from '../utils/filters';
 import { buildBodyFromForm } from '../utils/queryMapping';
+import { doesQueryTypeSupportTime } from '../utils/supportTime';
 
 type Params = {
   query: MyQuery;
@@ -60,6 +61,7 @@ export function useJsonSync({
       parsed = {};
     }
     const body = buildBodyFromForm(info, query, currentQueryType);
+    const resolvedSupportTime = query.queryTypeId ? doesQueryTypeSupportTime(currentQueryType) : undefined;
     const legacyTypes: string[] | undefined = isLegacyQueryType(currentQueryType)
       ? (Array.isArray(currentQueryType?.filters)
           ? (currentQueryType!.filters as any[]).filter((f: any) => typeof f === 'string' && f.toLowerCase() !== 'keys')
@@ -86,6 +88,7 @@ export function useJsonSync({
       // In all other cases, propagate the merged JSON to the query (normal behavior)
       const nextQuery: MyQuery = {
         ...query,
+        supportTime: resolvedSupportTime,
         ui: {
           ...(query.ui || {}),
           // Any form-driven merge should clear the unknown-queryType execution block.

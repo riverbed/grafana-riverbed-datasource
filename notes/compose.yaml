@@ -1,0 +1,39 @@
+# compose.yaml
+# version: 1.0.3 (2026-03)
+#
+# This Docker Compose file run Grafana with the Riverbed plugin in a container
+#
+# Usage:
+#
+#  1. Run the following command to start the Grafana container with the plugin.
+#
+#     docker compose up -d
+#
+#     Additionally, you can specify the plugin ZIP URL. Check the release page https://github.com/riverbed/grafana-riverbed-datasource/releases to find the plugin ZIP URL.
+#     For example:
+#
+#     GF_PLUGINS_PREINSTALL=riverbed-datastore-datasource@@https://github.com/riverbed/grafana-riverbed-datasource/releases/download/v1.0.20260325125536/riverbed-datastore-datasource-1.0.20260325125536.zip
+#     docker compose up -d 
+#
+#  2. Access Grafana at http://localhost:3000 (default credentials: admin/admin)  
+#
+#  3. Go to Administration > Plugins and data > Plugin to verify the Riverbed plugin is installed and enabled. You can also check the Grafana logs for any errors related to plugin installation.
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    #user: root
+    environment:
+      - TERM=linux
+      # Preinstall the Riverbed plugin from the specified URL
+      # and allow loading unsigned plugin for testing
+      - GF_PLUGINS_PREINSTALL=riverbed-datastore-datasource@@https://github.com/riverbed/grafana-riverbed-datasource/releases/download/v1.0.20260325125536/riverbed-datastore-datasource-1.0.20260325125536.zip
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=riverbed-datastore-datasource
+    ports:
+      - '3000:3000'
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+volumes:
+  grafana_storage: {}
